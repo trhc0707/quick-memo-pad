@@ -1,0 +1,57 @@
+default_platform(:mac)
+
+platform :mac do
+  before_all do
+    app_store_connect_api_key(
+      key_id: "M9JAD8N5R3",
+      issuer_id: "d2ef4be8-db48-4d7e-9f99-996662dcced7",
+      key_filepath: File.expand_path("../fastlane/AuthKey_M9JAD8N5R3.p8", __dir__),
+      in_house: false
+    )
+  end
+
+  desc "Step 1: App IDの登録"
+  lane :create_app do
+    produce(
+      app_identifier: "com.takumaimamura.quick-memo-pad",
+      app_name: "Quick Memo Pad",
+      language: "Japanese",
+      app_version: "1.0.0",
+      sku: "quickmemopad001",
+      platform: "osx"
+    )
+  end
+
+  desc "Step 2: 証明書の作成"
+  lane :create_certs do
+    cert(
+      platform: "macos"
+    )
+  end
+
+  desc "Step 3: プロビジョニングプロファイルの作成"
+  lane :create_profile do
+    sigh(
+      app_identifier: "com.takumaimamura.quick-memo-pad",
+      platform: "macos"
+    )
+  end
+
+  desc "Step 4: App Storeへアップロード"
+  lane :upload do
+    deliver(
+      app_identifier: "com.takumaimamura.quick-memo-pad",
+      platform: "osx",
+      skip_metadata: true,
+      skip_screenshots: true,
+      pkg: "../dist/mas/Quick Memo Pad.pkg"
+    )
+  end
+
+  desc "全部やる"
+  lane :all do
+    create_app
+    create_certs
+    create_profile
+  end
+end

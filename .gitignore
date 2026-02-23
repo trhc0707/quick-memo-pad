@@ -1,0 +1,8 @@
+node_modules/
+dist/
+fastlane/AuthKey_*.p8
+fastlane/api_key.json
+build/icon.iconset/
+build/icon_1024.png
+*.dmg
+*.blockmap
